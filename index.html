@@ -1,443 +1,225 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Book of Destiny</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#050301">
+<title>The Book of Destiny</title>
+<style>
+  :root{
+    --gold:#f4c56b;
+    --ink:#2a1308;
+  }
+  *{box-sizing:border-box}
+  html,body{
+    width:100%;height:100%;margin:0;overflow:hidden;background:#000;
+    font-family:Georgia,"Times New Roman",serif;
+  }
+  #app{
+    position:relative;
+    width:100vw;height:100vh;
+    background:
+      linear-gradient(to bottom,rgba(0,0,0,.12),rgba(0,0,0,.05) 55%,rgba(0,0,0,.42)),
+      url("background.jpg") center center/cover no-repeat;
+  }
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+  /* subtle cinematic movement */
+  #app::before{
+    content:"";
+    position:absolute;inset:-3%;
+    background:inherit;
+    filter:saturate(1.04);
+    animation:breathe 9s ease-in-out infinite alternate;
+    pointer-events:none;
+  }
+  @keyframes breathe{
+    from{transform:scale(1.00)}
+    to{transform:scale(1.025)}
+  }
 
-    body {
-      margin: 0;
-      overflow: hidden;
-      font-family: Georgia, serif;
-      background:
-        radial-gradient(circle at 50% 25%, rgba(157, 87, 35, 0.35), transparent 40%),
-        linear-gradient(#120b08, #030202);
-      color: white;
-    }
+  .top{
+    position:absolute;z-index:3;top:3.2%;left:50%;transform:translateX(-50%);
+    width:92%;text-align:center;color:#f8d993;text-shadow:0 2px 10px #000,0 0 22px #000;
+  }
+  .top h1{
+    margin:0;font-size:clamp(27px,7vw,58px);letter-spacing:.06em;
+    line-height:.95;
+  }
+  .top p{
+    margin:.55rem 0 0;font-size:clamp(14px,3.2vw,23px);
+    color:#fff1c8;letter-spacing:.04em;
+  }
 
-    .scene {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-    }
+  .instruction{
+    position:absolute;z-index:3;bottom:4.2%;left:50%;transform:translateX(-50%);
+    width:88%;padding:.72rem 1rem;text-align:center;
+    color:#ffe6aa;background:rgba(0,0,0,.58);
+    border:1px solid rgba(244,197,107,.55);border-radius:999px;
+    font-size:clamp(14px,3.6vw,22px);letter-spacing:.03em;
+    backdrop-filter:blur(6px);
+    box-shadow:0 6px 30px rgba(0,0,0,.45);
+  }
 
-    .title {
-      position: absolute;
-      top: 4%;
-      width: 100%;
-      text-align: center;
-      z-index: 5;
-      text-shadow: 0 0 18px #000;
-    }
+  /* covers the static generated name, then displays the live name */
+  .name-stage{
+    position:absolute;z-index:4;
+    left:52.5%;top:56.2%;
+    width:41%;height:12%;
+    transform:rotate(-3deg);
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+    border-radius:10px;
+    background:
+      radial-gradient(ellipse at center,rgba(213,172,102,.96),rgba(170,121,59,.94));
+    box-shadow:inset 0 0 18px rgba(70,30,6,.28);
+  }
+  #name{
+    width:100%;padding:0 .35rem;text-align:center;white-space:nowrap;
+    color:var(--ink);
+    font-family:"Brush Script MT","Segoe Script","Snell Roundhand",cursive;
+    font-size:clamp(34px,8.5vw,76px);
+    line-height:1;
+    text-shadow:0 1px 0 rgba(255,255,255,.2);
+    opacity:0;
+  }
+  #name.writing{
+    opacity:1;
+    animation:reveal 2.6s steps(26,end), glow 2.6s ease-out;
+  }
+  @keyframes reveal{
+    from{clip-path:inset(0 100% 0 0)}
+    to{clip-path:inset(0 0 0 0)}
+  }
+  @keyframes glow{
+    0%,80%{filter:none}
+    92%{filter:drop-shadow(0 0 10px #ffd36f)}
+    100%{filter:none}
+  }
 
-    .title h1 {
-      margin: 0;
-      font-size: clamp(30px, 5vw, 70px);
-      letter-spacing: 3px;
-      color: #e8c98b;
-    }
+  .spark{
+    position:absolute;z-index:5;left:76%;top:62%;
+    width:10px;height:10px;border-radius:50%;
+    background:#fff6bc;box-shadow:0 0 10px #ffd36f,0 0 25px #ff8d20;
+    opacity:0;
+  }
+  .spark.play{
+    animation:spark 2.6s linear;
+  }
+  @keyframes spark{
+    0%{opacity:0;transform:translateX(-150px) scale(.5)}
+    12%{opacity:1}
+    85%{opacity:1;transform:translateX(0) scale(1.2)}
+    100%{opacity:0;transform:translateX(15px) scale(0)}
+  }
 
-    .title p {
-      margin-top: 10px;
-      font-size: clamp(15px, 2vw, 25px);
-      color: #fff4d3;
-    }
+  .status{
+    position:absolute;z-index:9;left:10px;bottom:10px;
+    color:rgba(255,255,255,.12);font:11px Arial,sans-serif;
+    user-select:none;pointer-events:none;
+  }
 
-    .fireplace {
-      position: absolute;
-      left: 4%;
-      bottom: 24%;
-      width: 20%;
-      height: 37%;
-      border: 16px solid #21130e;
-      border-bottom: 0;
-      border-radius: 120px 120px 0 0;
-      background: radial-gradient(circle at 50% 90%, #ffce62, #e04b19 25%, #260b05 65%);
-      box-shadow: 0 0 80px rgba(255, 94, 25, 0.35);
-    }
+  /* hidden buffer: physical keyboard only */
+  #secret{
+    position:fixed;left:-10000px;top:-10000px;
+    opacity:0;width:1px;height:1px;
+  }
 
-    .flame {
-      position: absolute;
-      bottom: 4%;
-      left: 40%;
-      width: 22%;
-      height: 42%;
-      background: linear-gradient(#fff6a9, #ff8a22, #b82009);
-      border-radius: 50% 50% 35% 35%;
-      filter: blur(2px);
-      animation: flicker 0.65s infinite alternate;
-    }
+  .flash{
+    position:absolute;inset:0;z-index:8;pointer-events:none;opacity:0;
+    background:radial-gradient(circle at 65% 60%,rgba(255,195,80,.30),transparent 38%);
+  }
+  .flash.play{animation:flash .75s ease-out}
+  @keyframes flash{0%{opacity:0}35%{opacity:1}100%{opacity:0}}
 
-    @keyframes flicker {
-      from {
-        transform: scale(0.85) rotate(-3deg);
-        opacity: 0.75;
-      }
-      to {
-        transform: scale(1.08) rotate(4deg);
-        opacity: 1;
-      }
-    }
-
-    .monk {
-      position: absolute;
-      right: 7%;
-      bottom: 20%;
-      width: 24%;
-      height: 52%;
-    }
-
-    .hood {
-      position: absolute;
-      top: 0;
-      left: 20%;
-      width: 60%;
-      height: 43%;
-      border-radius: 50% 50% 45% 45%;
-      background: #2b190f;
-      box-shadow: inset 0 0 45px #050302;
-    }
-
-    .face {
-      position: absolute;
-      top: 15%;
-      left: 34%;
-      width: 34%;
-      height: 25%;
-      background: #a96948;
-      border-radius: 48%;
-      box-shadow: inset 0 -15px 18px rgba(0, 0, 0, 0.45);
-    }
-
-    .body {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 72%;
-      background: linear-gradient(90deg, #1d100b, #4a2917, #1a0e09);
-      border-radius: 50% 50% 10% 10%;
-    }
-
-    .desk {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 30%;
-      background:
-        repeating-linear-gradient(
-          90deg,
-          #30170b,
-          #4d2914 35px,
-          #251006 70px
-        );
-      border-top: 14px solid #170a04;
-      box-shadow: 0 -20px 55px rgba(0, 0, 0, 0.8);
-    }
-
-    .book {
-      position: absolute;
-      z-index: 3;
-      bottom: 8%;
-      width: min(65vw, 900px);
-      height: min(32vw, 430px);
-      min-height: 250px;
-      display: flex;
-      perspective: 1000px;
-      filter: drop-shadow(0 25px 20px rgba(0, 0, 0, 0.8));
-    }
-
-    .page {
-      position: relative;
-      width: 50%;
-      height: 100%;
-      background:
-        radial-gradient(circle at center, #f2dfaa, #b99356);
-      border: 9px solid #39200e;
-      padding: 30px;
-      color: #3a1d0d;
-    }
-
-    .left-page {
-      border-radius: 12px 4px 4px 22px;
-      transform: rotateY(6deg);
-    }
-
-    .right-page {
-      border-radius: 4px 12px 22px 4px;
-      transform: rotateY(-6deg);
-    }
-
-    .ornament {
-      font-size: clamp(35px, 6vw, 80px);
-      text-align: center;
-      opacity: 0.45;
-    }
-
-    #writtenName {
-      position: absolute;
-      top: 45%;
-      left: 5%;
-      width: 90%;
-      text-align: center;
-      font-family: cursive;
-      font-size: clamp(32px, 6vw, 82px);
-      font-style: italic;
-      font-weight: bold;
-      overflow: hidden;
-      white-space: nowrap;
-      color: #281209;
-      text-shadow: 1px 1px rgba(255, 255, 255, 0.25);
-    }
-
-    .writing {
-      animation: reveal 3s steps(20, end);
-    }
-
-    @keyframes reveal {
-      from {
-        clip-path: inset(0 100% 0 0);
-      }
-      to {
-        clip-path: inset(0 0 0 0);
-      }
-    }
-
-    .quill {
-      position: absolute;
-      z-index: 7;
-      bottom: 27%;
-      left: 52%;
-      font-size: clamp(70px, 11vw, 150px);
-      transform: rotate(-38deg);
-      transform-origin: bottom center;
-      animation: idleWriting 2.5s ease-in-out infinite;
-    }
-
-    .quill.active {
-      animation: realWriting 0.35s ease-in-out infinite alternate;
-    }
-
-    @keyframes idleWriting {
-      0%, 100% {
-        transform: rotate(-38deg) translate(0, 0);
-      }
-      50% {
-        transform: rotate(-36deg) translate(5px, -4px);
-      }
-    }
-
-    @keyframes realWriting {
-      from {
-        transform: rotate(-42deg) translate(-25px, 0);
-      }
-      to {
-        transform: rotate(-32deg) translate(55px, 8px);
-      }
-    }
-
-    .candle {
-      position: absolute;
-      z-index: 4;
-      bottom: 23%;
-      left: 16%;
-      width: 35px;
-      height: 145px;
-      background: linear-gradient(90deg, #a97c42, #ffe3a1, #92642e);
-      border-radius: 8px;
-    }
-
-    .candle::before {
-      content: "";
-      position: absolute;
-      top: -48px;
-      left: 5px;
-      width: 25px;
-      height: 45px;
-      background: radial-gradient(circle at 50% 70%, #fff, #ffc13c 45%, #e74d10);
-      border-radius: 50% 50% 45% 45%;
-      animation: flicker 0.45s infinite alternate;
-      box-shadow: 0 0 40px #ff9c30;
-    }
-
-    .controls {
-      position: absolute;
-      z-index: 20;
-      right: 20px;
-      bottom: 20px;
-      display: flex;
-      gap: 8px;
-      padding: 10px;
-      border-radius: 14px;
-      background: rgba(0, 0, 0, 0.82);
-      backdrop-filter: blur(10px);
-      transition: opacity 0.3s;
-    }
-
-    .controls.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    input, button {
-      padding: 13px;
-      border: none;
-      border-radius: 8px;
-      font-size: 17px;
-    }
-
-    input {
-      width: 220px;
-      background: #fff5db;
-      color: #241208;
-    }
-
-    button {
-      cursor: pointer;
-      background: #8c5629;
-      color: white;
-      font-weight: bold;
-    }
-
-    .hint {
-      position: absolute;
-      z-index: 20;
-      left: 15px;
-      bottom: 15px;
-      font-family: Arial, sans-serif;
-      font-size: 12px;
-      opacity: 0.4;
-    }
-
-    @media (max-width: 700px) {
-      .fireplace {
-        width: 30%;
-        opacity: 0.65;
-      }
-
-      .monk {
-        width: 38%;
-        right: -4%;
-        opacity: 0.75;
-      }
-
-      .book {
-        width: 92vw;
-        height: 42vh;
-      }
-
-      .controls {
-        right: 8px;
-        bottom: 8px;
-      }
-    }
-  </style>
+  @media (orientation:landscape){
+    #app{width:56.25vh;height:100vh;margin:auto}
+  }
+</style>
 </head>
-
 <body>
-  <div class="scene">
+<div id="app" tabindex="0">
+  <div class="top">
+    <h1>THE BOOK OF DESTINY</h1>
+    <p>Comment your name. The book chooses who is remembered.</p>
+  </div>
 
-    <div class="title">
-      <h1>THE BOOK OF DESTINY</h1>
-      <p>Comment your name to enter the eternal book</p>
-    </div>
+  <div class="name-stage"><div id="name">Salar</div></div>
+  <div id="spark" class="spark"></div>
+  <div id="flash" class="flash"></div>
 
-    <div class="fireplace">
-      <div class="flame"></div>
-    </div>
+  <div class="instruction">✦ Comment your name to enter the eternal book ✦</div>
+  <div class="status">keyboard ready</div>
+  <input id="secret" autocomplete="off" autocapitalize="words" spellcheck="false">
+</div>
 
-    <div class="monk">
-      <div class="body"></div>
-      <div class="hood"></div>
-      <div class="face"></div>
-    </div>
+<script>
+(() => {
+  const secret = document.getElementById("secret");
+  const nameEl = document.getElementById("name");
+  const spark = document.getElementById("spark");
+  const flash = document.getElementById("flash");
+  let buffer = "";
+  let busy = false;
 
-    <div class="candle"></div>
+  function focusSecret(){
+    secret.focus({preventScroll:true});
+  }
 
-    <div class="book">
-      <div class="page left-page">
-        <div class="ornament">❦</div>
-      </div>
+  function writeName(raw){
+    const clean = raw.trim().replace(/\s+/g," ").slice(0,22);
+    if(!clean || busy) return;
+    busy = true;
 
-      <div class="page right-page">
-        <div class="ornament">☙</div>
-        <div id="writtenName">Your name awaits...</div>
-      </div>
-    </div>
+    nameEl.classList.remove("writing");
+    spark.classList.remove("play");
+    flash.classList.remove("play");
+    void nameEl.offsetWidth;
 
-    <div id="quill" class="quill">🪶</div>
+    nameEl.textContent = clean;
+    nameEl.classList.add("writing");
+    spark.classList.add("play");
+    flash.classList.add("play");
 
-    <div id="controls" class="controls">
-      <input
-        id="nameInput"
-        type="text"
-        placeholder="Type a viewer's name"
-        maxlength="22"
-        autocomplete="off"
-      >
-      <button onclick="writeName()">WRITE</button>
-      <button onclick="toggleControls()">HIDE</button>
-    </div>
+    if(navigator.vibrate) navigator.vibrate(30);
 
-    <div class="desk"></div>
+    setTimeout(() => {
+      busy = false;
+      buffer = "";
+      secret.value = "";
+      focusSecret();
+    }, 2850);
+  }
 
-    <div class="hint">
-      Press Enter to write • Press H to hide/show controls
-    </div>
+  // Physical keyboard workflow:
+  // Type any name anywhere. Press Enter. Nothing typed appears on screen.
+  window.addEventListener("keydown", (e) => {
+    if(e.metaKey || e.ctrlKey || e.altKey) return;
 
-  </div>
+    if(e.key === "Enter"){
+      e.preventDefault();
+      writeName(buffer);
+      return;
+    }
+    if(e.key === "Escape"){
+      buffer = "";
+      secret.value = "";
+      return;
+    }
+    if(e.key === "Backspace"){
+      e.preventDefault();
+      buffer = buffer.slice(0,-1);
+      return;
+    }
+    if(e.key.length === 1 && buffer.length < 22){
+      e.preventDefault();
+      buffer += e.key;
+    }
+  }, true);
 
-  <script>
-    const input = document.getElementById("nameInput");
-    const writtenName = document.getElementById("writtenName");
-    const quill = document.getElementById("quill");
-    const controls = document.getElementById("controls");
-
-    function writeName() {
-      const name = input.value.trim();
-
-      if (!name) return;
-
-      writtenName.classList.remove("writing");
-      quill.classList.add("active");
-      writtenName.textContent = "";
-
-      setTimeout(() => {
-        writtenName.textContent = name;
-        writtenName.classList.add("writing");
-      }, 350);
-
-      setTimeout(() => {
-        quill.classList.remove("active");
-        input.value = "";
-        input.focus();
-      }, 3400);
-    }
-
-    function toggleControls() {
-      controls.classList.toggle("hidden");
-    }
-
-    input.addEventListener("keydown", event => {
-      if (event.key === "Enter") {
-        writeName();
-      }
-    });
-
-    document.addEventListener("keydown", event => {
-      if (event.key.toLowerCase() === "h") {
-        toggleControls();
-      }
-    });
-
-    input.focus();
-  </script>
+  // Tap once after opening page so Safari accepts keyboard focus.
+  document.getElementById("app").addEventListener("click", focusSecret);
+  window.addEventListener("load", focusSecret);
+})();
+</script>
 </body>
 </html>
