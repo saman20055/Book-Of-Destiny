@@ -8,11 +8,9 @@
 <style>
 :root{
   --pink:#ff3bbf;
-  --pink2:#a41cff;
   --blue:#20b9ff;
-  --blue2:#335cff;
   --gold:#ffd34f;
-  --panel:rgba(13,10,28,.90);
+  --panel:rgba(13,10,28,.94);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05030c;font-family:Arial,Helvetica,sans-serif}
@@ -24,9 +22,9 @@ button{font:inherit}
   height:min(100dvh,177.777vw);
   overflow:hidden;
   background:
-    radial-gradient(circle at 20% 20%,rgba(255,58,191,.18),transparent 31%),
-    radial-gradient(circle at 82% 28%,rgba(32,185,255,.18),transparent 31%),
-    linear-gradient(#281153 0%,#493a66 27%,#7b9870 27.2%,#5d7454 82%,#160c2e 82.2%);
+    radial-gradient(circle at 20% 20%,rgba(255,58,191,.19),transparent 31%),
+    radial-gradient(circle at 82% 28%,rgba(32,185,255,.19),transparent 31%),
+    linear-gradient(#281153 0%,#493a66 22%,#7b9870 22.2%,#5d7454 84%,#160c2e 84.2%);
   color:white;
   isolation:isolate;
 }
@@ -34,15 +32,14 @@ button{font:inherit}
   content:"";position:absolute;inset:0;pointer-events:none;z-index:99;
   box-shadow:inset 0 0 55px rgba(0,0,0,.42);
 }
-.topbar{
-  position:absolute;z-index:15;left:3%;right:3%;top:2.2%;
-  display:flex;align-items:center;justify-content:space-between;
-  font-weight:800;font-size:clamp(10px,2vw,14px)
+.title{
+  position:absolute;z-index:12;left:50%;top:2.2%;transform:translateX(-50%);
+  font-weight:1000;font-style:italic;font-size:clamp(24px,5.7vw,44px);
+  text-shadow:0 4px 0 rgba(0,0,0,.35);
+  white-space:nowrap;
 }
-.live-pill{padding:.35rem .6rem;border-radius:999px;background:#ff295f;box-shadow:0 0 16px rgba(255,41,95,.45)}
-.viewers{color:#f6eaff}
 .goal{
-  position:absolute;z-index:14;left:5%;right:5%;top:7%;
+  position:absolute;z-index:14;left:5%;right:5%;top:7.5%;
   padding:.65rem .8rem;border-radius:14px;
   background:linear-gradient(180deg,rgba(134,82,255,.94),rgba(77,39,171,.94));
   border:2px solid rgba(255,255,255,.45);
@@ -51,13 +48,8 @@ button{font:inherit}
 .goal-head{display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:clamp(11px,2.4vw,16px)}
 .goal-track{margin-top:.45rem;height:11px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden}
 .goal-fill{height:100%;width:0;background:linear-gradient(90deg,#ffcf48,#fff49c);border-radius:inherit;transition:width .45s ease}
-.round{
-  position:absolute;z-index:12;left:50%;top:17%;transform:translateX(-50%);
-  font-weight:1000;font-style:italic;font-size:clamp(22px,5.3vw,42px);
-  text-shadow:0 3px 0 rgba(0,0,0,.38)
-}
 .teams{
-  position:absolute;z-index:12;left:4%;right:4%;top:22%;
+  position:absolute;z-index:12;left:4%;right:4%;top:17%;
   display:flex;justify-content:space-between;pointer-events:none
 }
 .team{width:42%}
@@ -68,18 +60,13 @@ button{font:inherit}
 }
 .girls{color:var(--pink)}.boys{color:var(--blue)}
 .score{margin-top:.4rem;font-weight:900;font-size:clamp(15px,3.5vw,25px)}
-.gift-map{
-  margin-top:.65rem;display:inline-grid;gap:.25rem;padding:.35rem .45rem;
-  border-radius:8px;background:rgba(255,255,255,.72);color:#151515;
-  font-weight:900;font-size:clamp(9px,1.8vw,12px)
-}
 .board{
-  position:absolute;z-index:6;left:3%;right:3%;top:34%;height:45%;
+  position:absolute;z-index:6;left:3%;right:3%;top:28%;height:51%;
   border-radius:16px 16px 10px 10px;
   overflow:hidden;
   background:
     radial-gradient(circle at 50% 20%,rgba(255,255,255,.13),transparent 32%),
-    linear-gradient(90deg,rgba(255,59,191,.10),transparent 42%,transparent 58%,rgba(32,185,255,.10)),
+    linear-gradient(90deg,rgba(255,59,191,.11),transparent 42%,transparent 58%,rgba(32,185,255,.11)),
     rgba(103,132,91,.34);
   border:2px solid rgba(255,255,255,.16);
   box-shadow:inset 0 0 30px rgba(0,0,0,.23);
@@ -128,14 +115,8 @@ button{
 button.girl-btn{background:linear-gradient(#ff4fc9,#991772)}
 button.boy-btn{background:linear-gradient(#31c6ff,#244fcd)}
 button.live-btn{background:linear-gradient(#ff355f,#9f1232)}
-button.auto-btn{background:linear-gradient(#f2b62d,#a65c0c)}
+button.sound-btn{background:linear-gradient(#f2b62d,#a65c0c)}
 .secret{position:absolute;z-index:60;right:0;bottom:0;width:78px;height:78px}
-.live-mode{
-  position:absolute;z-index:25;left:3%;bottom:2.2%;
-  padding:.35rem .55rem;border-radius:999px;background:#ff295f;
-  font-size:10px;font-weight:900;display:none
-}
-.live-mode.show{display:block}
 .winner{
   position:absolute;z-index:40;inset:0;display:grid;place-items:center;
   background:rgba(6,3,17,.72);backdrop-filter:blur(4px);
@@ -146,29 +127,29 @@ button.auto-btn{background:linear-gradient(#f2b62d,#a65c0c)}
 @keyframes winnerPop{to{transform:scale(1)}}
 .winner-card h2{margin:0;font-size:clamp(44px,11vw,90px);font-style:italic}
 .winner-card p{font-weight:900;font-size:clamp(18px,4vw,30px)}
+.hint{
+  margin:.5rem 0 0;color:#c8b8de;font-size:11px;line-height:1.35
+}
 </style>
 </head>
 <body>
-<div id="app">
-  <div class="topbar"><span class="live-pill">LIVE</span><span class="viewers">👁 <span id="viewers">127</span></span></div>
+<div id="app" tabindex="0">
+
+  <div class="title">GIRLS VS BOYS</div>
 
   <section class="goal">
     <div class="goal-head"><span>🎁 GIFT GOAL</span><span><span id="goalNow">0</span> / <span id="goalMax">5000</span></span></div>
     <div class="goal-track"><div id="goalFill" class="goal-fill"></div></div>
   </section>
 
-  <div class="round">ROUND: <span id="round">1</span></div>
-
   <section class="teams">
     <div class="team">
       <h2 class="team-title girls">GIRLS</h2>
       <div class="score">SCORE: <span id="girlsScore">0</span></div>
-      <div class="gift-map"><span>💬 +1</span><span>🌹 +10</span></div>
     </div>
     <div class="team right">
       <h2 class="team-title boys">BOYS</h2>
       <div class="score">SCORE: <span id="boysScore">0</span></div>
-      <div class="gift-map"><span>❤️ +1</span><span>🎁 +10</span></div>
     </div>
   </section>
 
@@ -182,10 +163,10 @@ button.auto-btn{background:linear-gradient(#f2b62d,#a65c0c)}
     </div>
   </section>
 
-  <section id="feed" class="feed"><div class="feed-line">The battle is starting…</div></section>
+  <section id="feed" class="feed"><div class="feed-line">Press G for Girls or B for Boys.</div></section>
 
   <section id="setup" class="setup">
-    <div class="setup-title">TEST CONTROLS</div>
+    <div class="setup-title">PRIVATE TEST CONTROLS</div>
     <div class="btn-grid">
       <button class="girl-btn" data-team="girls" data-value="1">GIRL +1</button>
       <button class="girl-btn" data-team="girls" data-value="10">GIRL +10</button>
@@ -193,14 +174,14 @@ button.auto-btn{background:linear-gradient(#f2b62d,#a65c0c)}
       <button class="boy-btn" data-team="boys" data-value="10">BOY +10</button>
       <button id="girlBig" class="girl-btn">GIRL +100</button>
       <button id="boyBig" class="boy-btn">BOY +100</button>
-      <button id="auto" class="auto-btn">AUTO DEMO</button>
+      <button id="sound" class="sound-btn">ENABLE SOUND</button>
       <button id="startLive" class="live-btn">START LIVE</button>
     </div>
+    <p class="hint">Keyboard: G = Girls ball, B = Boys ball. Shift+G / Shift+B = +10. Triple-tap bottom-right to restore controls.</p>
   </section>
 
-  <div id="liveMode" class="live-mode">LIVE MODE</div>
   <div id="secret" class="secret"></div>
-  <footer class="footer">GIRLS VS BOYS • GIFTS CONTROL THE GAME</footer>
+  <footer class="footer">GIFTS CONTROL THE GAME</footer>
 
   <div id="winner" class="winner"><div class="winner-card"><h2 id="winnerTitle"></h2><p id="winnerText"></p></div></div>
 </div>
@@ -210,8 +191,9 @@ button.auto-btn{background:linear-gradient(#f2b62d,#a65c0c)}
 const canvas=document.getElementById("game"),ctx=canvas.getContext("2d"),app=document.getElementById("app");
 const scoreEls={girls:document.getElementById("girlsScore"),boys:document.getElementById("boysScore")};
 const colors={girls:"#ff3bbf",boys:"#20b9ff"};
-let W=0,H=0,dpr=1,pegs=[],balls=[],scores={girls:0,boys:0},round=1,goal=0,goalMax=5000;
-let live=false,autoTimer=null,taps=0,tapTimer=null,last=performance.now();
+let W=0,H=0,dpr=1,pegs=[],balls=[],scores={girls:0,boys:0},goal=0,goalMax=5000;
+let live=false,taps=0,tapTimer=null,last=performance.now(),winnerLocked=false;
+let audioCtx=null,master=null,musicTimer=null,soundEnabled=false;
 
 function resize(){
   const r=canvas.getBoundingClientRect();dpr=Math.min(devicePixelRatio||1,2);
@@ -224,7 +206,7 @@ function buildPegs(){
     const count=5+row,spacing=W/(count+1),offset=row%2?spacing*.22:0;
     for(let i=0;i<count;i++){
       let x=spacing*(i+1)+offset-spacing*.1;
-      if(x>W*.95) x-=spacing*.45;
+      if(x>W*.95)x-=spacing*.45;
       pegs.push({x,y:top+row*rowGap,r:3.2})
     }
   }
@@ -233,16 +215,19 @@ function spawn(team,value=1){
   const count=Math.min(18,Math.max(1,Math.ceil(value/10)));
   const base=Math.max(1,Math.round(value/count));
   for(let i=0;i<count;i++){
-    setTimeout(()=>balls.push({
-      x:W*(team==="girls"?.42:.58)+(Math.random()-.5)*W*.1,y:-8,
-      vx:(Math.random()-.5)*1.3,vy:1+Math.random(),r:6+Math.min(4,value/30),
-      team,value:base,alive:true,trail:[]
-    }),i*90)
+    setTimeout(()=>{
+      balls.push({
+        x:W*(team==="girls"?.42:.58)+(Math.random()-.5)*W*.1,y:-8,
+        vx:(Math.random()-.5)*1.3,vy:1+Math.random(),r:6+Math.min(4,value/30),
+        team,value:base,alive:true,trail:[],lastHit:0
+      });
+      playDrop(team)
+    },i*90)
   }
   goal=Math.min(goalMax,goal+value);updateGoal();
-  feed(`${team==="girls"?"💗":"💙"} ${team.toUpperCase()} received +${value}`);
+  feed(`${team==="girls"?"💗":"💙"} ${team.toUpperCase()} +${value}`);
 }
-function physics(b,dt){
+function physics(b,dt,now){
   b.vy+=.16*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;
   b.trail.push({x:b.x,y:b.y});if(b.trail.length>7)b.trail.shift();
   for(const p of pegs){
@@ -250,14 +235,13 @@ function physics(b,dt){
     if(dist<min&&dist>0){
       const nx=dx/dist,ny=dy/dist,over=min-dist;b.x+=nx*over;b.y+=ny*over;
       const dot=b.vx*nx+b.vy*ny;b.vx-=1.75*dot*nx;b.vy-=1.75*dot*ny;
-      b.vx+=(Math.random()-.5)*.55;b.vy*=.92
+      b.vx+=(Math.random()-.5)*.55;b.vy*=.92;
+      if(now-b.lastHit>65){playPeg(b.team,b.y/H);b.lastHit=now}
     }
   }
   if(b.x<b.r){b.x=b.r;b.vx=Math.abs(b.vx)*.8}
   if(b.x>W-b.r){b.x=W-b.r;b.vx=-Math.abs(b.vx)*.8}
-  if(b.y>H*.86&&b.alive){
-    b.alive=false;scoreBall(b)
-  }
+  if(b.y>H*.86&&b.alive){b.alive=false;scoreBall(b)}
 }
 function scoreBall(b){
   const bin=Math.max(0,Math.min(8,Math.floor(b.x/W*9)));
@@ -265,6 +249,7 @@ function scoreBall(b){
   const side=bin<4?"girls":bin>4?"boys":b.team;
   const points=bin===4?b.value*2:b.value+mult;
   scores[side]+=points;scoreEls[side].textContent=scores[side].toLocaleString();
+  playScore(side,points);
   feed(`${side==="girls"?"💗 GIRLS":"💙 BOYS"} scored +${points}`);
   checkWinner()
 }
@@ -287,45 +272,98 @@ function draw(){
 }
 function loop(now){
   const dt=Math.min(2,(now-last)/16.67);last=now;
-  for(const b of balls)if(b.alive)physics(b,dt);
+  for(const b of balls)if(b.alive)physics(b,dt,now);
   balls=balls.filter(b=>b.alive&&b.y<H+30);draw();requestAnimationFrame(loop)
 }
 function hexA(hex,a){let n=parseInt(hex.slice(1),16);return`rgba(${n>>16},${n>>8&255},${n&255},${a})`}
-function feed(text){const f=document.getElementById("feed");f.innerHTML=`<div class="feed-line">${text}</div>`}
+function feed(text){document.getElementById("feed").innerHTML=`<div class="feed-line">${text}</div>`}
 function updateGoal(){
   document.getElementById("goalNow").textContent=goal;
   document.getElementById("goalFill").style.width=Math.min(100,goal/goalMax*100)+"%";
-  if(goal>=goalMax){feed("⭐ GIFT GOAL COMPLETED!");goal=0}
+  if(goal>=goalMax){feed("⭐ GIFT GOAL COMPLETED!");playGoal();goal=0}
 }
 function checkWinner(){
+  if(winnerLocked)return;
   const limit=1500;
   if(scores.girls>=limit||scores.boys>=limit){
+    winnerLocked=true;
     const team=scores.girls>=limit?"girls":"boys";
     const win=document.getElementById("winner");
     document.getElementById("winnerTitle").textContent=team.toUpperCase()+" WIN!";
     document.getElementById("winnerTitle").style.color=colors[team];
     document.getElementById("winnerText").textContent=`${scores.girls.toLocaleString()} — ${scores.boys.toLocaleString()}`;
-    win.classList.add("show");
-    setTimeout(()=>{win.classList.remove("show");round++;document.getElementById("round").textContent=round;scores={girls:0,boys:0};scoreEls.girls.textContent=0;scoreEls.boys.textContent=0;balls=[]},3500)
+    playWin(team);win.classList.add("show");
+    setTimeout(()=>{
+      win.classList.remove("show");
+      scores={girls:0,boys:0};
+      scoreEls.girls.textContent=0;scoreEls.boys.textContent=0;
+      balls=[];winnerLocked=false;feed("New battle started.")
+    },3500)
   }
 }
-function toggleAuto(){
-  if(autoTimer){clearInterval(autoTimer);autoTimer=null;document.getElementById("auto").textContent="AUTO DEMO";return}
-  document.getElementById("auto").textContent="STOP AUTO";
-  autoTimer=setInterval(()=>{
-    const team=Math.random()<.5?"girls":"boys";
-    const roll=Math.random(),v=roll<.65?1:roll<.92?10:100;
-    spawn(team,v)
-  },900+Math.random()*500)
+function startLive(){live=true;document.getElementById("setup").classList.add("hidden");app.focus()}
+function stopLive(){live=false;document.getElementById("setup").classList.remove("hidden")}
+
+function initAudio(){
+  if(audioCtx)return;
+  audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  master=audioCtx.createGain();master.gain.value=.45;master.connect(audioCtx.destination);
+  startMusic()
 }
-function startLive(){live=true;document.getElementById("setup").classList.add("hidden");document.getElementById("liveMode").classList.add("show");if(!autoTimer)toggleAuto()}
-function stopLive(){live=false;document.getElementById("setup").classList.remove("hidden");document.getElementById("liveMode").classList.remove("show")}
+function tone(freq,dur=.08,type="sine",vol=.12,delay=0){
+  if(!soundEnabled||!audioCtx)return;
+  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(0,audioCtx.currentTime+delay);
+  g.gain.linearRampToValueAtTime(vol,audioCtx.currentTime+delay+.01);
+  g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+delay+dur);
+  o.connect(g);g.connect(master);o.start(audioCtx.currentTime+delay);o.stop(audioCtx.currentTime+delay+dur+.03)
+}
+function playDrop(team){tone(team==="girls"?440:330,.08,"triangle",.08)}
+function playPeg(team,pos){tone((team==="girls"?500:380)+pos*180,.04,"sine",.035)}
+function playScore(team,points){
+  const base=team==="girls"?520:390;
+  tone(base,.09,"triangle",.1);tone(base*1.25,.12,"triangle",.09,.06);
+  if(points>=100)tone(base*1.5,.2,"sawtooth",.08,.12)
+}
+function playWin(team){
+  const b=team==="girls"?523.25:392;
+  [1,1.25,1.5,2].forEach((m,i)=>tone(b*m,.3,"triangle",.13,i*.13))
+}
+function playGoal(){[440,554,659,880].forEach((f,i)=>tone(f,.25,"sawtooth",.1,i*.1))}
+function startMusic(){
+  if(musicTimer)return;
+  const seq=[110,138.59,164.81,138.59,123.47,155.56,185,155.56];
+  let i=0;
+  musicTimer=setInterval(()=>{
+    if(soundEnabled){
+      tone(seq[i%seq.length],1.8,"sine",.035);
+      tone(seq[i%seq.length]*2,.7,"triangle",.018,.15)
+    }
+    i++
+  },900)
+}
+function toggleSound(){
+  initAudio();
+  soundEnabled=!soundEnabled;
+  if(audioCtx.state==="suspended")audioCtx.resume();
+  document.getElementById("sound").textContent=soundEnabled?"SOUND ON":"ENABLE SOUND";
+  if(soundEnabled){tone(440,.12,"triangle",.1);tone(660,.15,"triangle",.08,.08)}
+}
+
 document.querySelectorAll("[data-team]").forEach(b=>b.onclick=()=>spawn(b.dataset.team,+b.dataset.value));
 document.getElementById("girlBig").onclick=()=>spawn("girls",100);
 document.getElementById("boyBig").onclick=()=>spawn("boys",100);
-document.getElementById("auto").onclick=toggleAuto;
+document.getElementById("sound").onclick=toggleSound;
 document.getElementById("startLive").onclick=startLive;
 document.getElementById("secret").onpointerup=()=>{taps++;clearTimeout(tapTimer);tapTimer=setTimeout(()=>taps=0,700);if(taps>=3){taps=0;live?stopLive():startLive()}};
+
+document.addEventListener("keydown",e=>{
+  if(e.repeat)return;
+  const k=e.key.toLowerCase();
+  if(k==="g"){e.preventDefault();spawn("girls",e.shiftKey?10:1)}
+  if(k==="b"){e.preventDefault();spawn("boys",e.shiftKey?10:1)}
+},true);
+
 resize();addEventListener("resize",resize);requestAnimationFrame(loop)
 })();
 </script>
